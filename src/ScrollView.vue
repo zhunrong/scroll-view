@@ -94,9 +94,9 @@ export default Vue.extend({
     onMouseMove(e: MouseEvent) {
       if (!this.scrolling) return;
       const { pageX, pageY } = e;
+      const scroll = this.$refs.scroll as HTMLDivElement;
       if (this.scrollDirection === "y") {
         const yScrollBar = this.$refs.yScrollBar as HTMLDivElement;
-        const scroll = this.$refs.scroll as HTMLDivElement;
         const { yScrollBarOffset, scrollTop } = this.scrollY(
           pageY - this.mouseY
         );
@@ -105,7 +105,14 @@ export default Vue.extend({
         });
         scroll.scrollTop = scrollTop;
       } else {
-        //
+        const xScrollBar = this.$refs.xScrollBar as HTMLDivElement;
+        const { xScrollBarOffset, scrollLeft } = this.scrollX(
+          pageX - this.mouseX
+        );
+        Object.assign(xScrollBar.style, {
+          transform: `translate3d(${xScrollBarOffset}px,0,0)`,
+        });
+        scroll.scrollLeft = scrollLeft;
       }
     },
     onMouseUp(e: MouseEvent) {
@@ -116,7 +123,9 @@ export default Vue.extend({
           pageY - this.mouseY
         ).yScrollBarOffset;
       } else {
-        //
+        this.xScrollBarOffset = this.scrollX(
+          pageX - this.mouseX
+        ).xScrollBarOffset;
       }
       this.scrolling = false;
     },
@@ -160,6 +169,17 @@ export default Vue.extend({
           (this.scrollHeight - this.clientHeight)
         : 0;
       return { yScrollBarOffset, scrollTop };
+    },
+    scrollX(movement: number) {
+      let xScrollBarOffset = this.xScrollBarOffset + movement;
+      const spaceWidth = this.clientWidth - this.xScrollBarWidth;
+      xScrollBarOffset = Math.max(0, xScrollBarOffset);
+      xScrollBarOffset = Math.min(spaceWidth, xScrollBarOffset);
+      const scrollLeft = spaceWidth
+        ? (xScrollBarOffset / spaceWidth) *
+          (this.scrollWidth - this.clientWidth)
+        : 0;
+      return { xScrollBarOffset, scrollLeft };
     },
   },
 });
