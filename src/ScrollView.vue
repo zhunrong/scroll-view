@@ -1,7 +1,9 @@
 <template>
   <div :class="['scroll-view', className]">
-    <div ref="scroll" class="scroll-inner" @scroll="onScroll">
-      <slot />
+    <div ref="scroll" class="scroll-container" @scroll="onScroll">
+      <div ref="scrollContent" class="scroll-content">
+        <slot />
+      </div>
     </div>
     <div class="scroll-bar scroll-bar-x">
       <div
@@ -51,11 +53,11 @@ export default Vue.extend({
   },
   mounted() {
     this.$nextTick(() => {
-      const container = this.$el as HTMLDivElement;
+      const scrollContent = this.$refs.scrollContent as HTMLDivElement;
       this.ro = new ResizeObserver(() => {
         this.onResize();
       });
-      this.ro.observe(container);
+      this.ro.observe(scrollContent);
       document.addEventListener("mousemove", this.onMouseMove);
       document.addEventListener("mouseup", this.onMouseUp);
     });
@@ -219,10 +221,14 @@ export default Vue.extend({
       opacity: 1;
     }
   }
-  .scroll-inner {
+  .scroll-container {
     width: calc(100% + var(--native-scroll-bar-size));
     height: calc(100% + var(--native-scroll-bar-size));
     overflow: scroll;
+  }
+  .scroll-content {
+    float: left;
+    min-width: 100%;
   }
 }
 
