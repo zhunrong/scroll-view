@@ -1,16 +1,16 @@
 <template>
-  <div class="scroll-view">
+  <div :class="['scroll-view', className]">
     <div ref="scroll" class="scroll-inner" @scroll="onScroll">
       <slot />
     </div>
-    <div class="scroll-bar-x">
+    <div class="scroll-bar scroll-bar-x">
       <div
         ref="xScrollBar"
         class="scroll-bar-inner"
         @mousedown="onMouseDown($event, 'x')"
       ></div>
     </div>
-    <div class="scroll-bar-y">
+    <div class="scroll-bar scroll-bar-y">
       <div
         ref="yScrollBar"
         class="scroll-bar-inner"
@@ -25,6 +25,12 @@ import Vue from "vue";
 import { ResizeObserver } from "@juggle/resize-observer";
 
 export default Vue.extend({
+  props: {
+    showScrollBar: {
+      type: String,
+      default: "hover",
+    },
+  },
   data() {
     return {
       ro: undefined as unknown as ResizeObserver,
@@ -59,6 +65,13 @@ export default Vue.extend({
     document.removeEventListener("mousemove", this.onMouseMove);
     document.removeEventListener("mouseup", this.onMouseUp);
   },
+  computed: {
+    className() {
+      return /^(hover|always)$/.test(this.showScrollBar)
+        ? this.showScrollBar
+        : "hover";
+    },
+  },
   methods: {
     onResize() {
       const yScrollBar = this.$refs.yScrollBar as HTMLDivElement;
@@ -67,10 +80,12 @@ export default Vue.extend({
       Object.assign(yScrollBar.style, {
         height: `${this.yScrollBarHeight}px`,
         transform: `translate3d(0,${this.yScrollBarOffset}px,0)`,
+        display: this.yScrollBarHeight === this.clientHeight ? "none" : "block",
       });
       Object.assign(xScrollBar.style, {
         width: `${this.xScrollBarWidth}px`,
         transform: `translate3d(${this.xScrollBarOffset}px,0,0)`,
+        display: this.xScrollBarWidth === this.clientWidth ? "none" : "block",
       });
     },
     onScroll() {
@@ -190,42 +205,63 @@ export default Vue.extend({
   height: 100%;
   overflow: hidden;
   position: relative;
+  --scroll-bar-color: rgba(204, 204, 204, 0.5);
+  --scroll-bar-active-color: rgba(204, 204, 204, 1);
+  --scroll-bar-size: 8px;
+  --native-scroll-bar-size: 17px;
+  &.hover:hover {
+    .scroll-bar {
+      opacity: 1;
+    }
+  }
+  &.always {
+    .scroll-bar {
+      opacity: 1;
+    }
+  }
   .scroll-inner {
-    width: calc(100% + 17px);
-    height: calc(100% + 17px);
+    width: calc(100% + var(--native-scroll-bar-size));
+    height: calc(100% + var(--native-scroll-bar-size));
     overflow: scroll;
   }
 }
 
-.scroll-bar-y {
+.scroll-bar {
   position: absolute;
-  top: 0;
-  right: 0;
+  opacity: 0;
+  transition: opacity 0.5s;
+  &:active {
+    opacity: 1 !important;
+    .scroll-bar-inner {
+      background: var(--scroll-bar-active-color) !important;
+    }
+  }
   .scroll-bar-inner {
-    width: 6px;
-    height: 0px;
-    border-radius: 3px;
-    background: rgba(204, 204, 204, 0.5);
+    border-radius: calc(var(--scroll-bar-size) / 2);
+    background: var(--scroll-bar-color);
     user-select: none;
+    transition: background-color 0.3s;
     &:hover {
-      background: rgba(204, 204, 204, 1);
+      background: var(--scroll-bar-active-color);
     }
   }
 }
 
+.scroll-bar-y {
+  top: 0;
+  right: 0;
+  .scroll-bar-inner {
+    width: var(--scroll-bar-size);
+    height: 0px;
+  }
+}
+
 .scroll-bar-x {
-  position: absolute;
   left: 0;
   bottom: 0;
   .scroll-bar-inner {
-    height: 6px;
+    height: var(--scroll-bar-size);
     width: 0px;
-    border-radius: 3px;
-    background: rgba(204, 204, 204, 0.5);
-    user-select: none;
-    &:hover {
-      background: rgba(204, 204, 204, 1);
-    }
   }
 }
 </style>
