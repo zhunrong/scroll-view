@@ -27,6 +27,7 @@ import Vue from "vue";
 import { ResizeObserver } from "@juggle/resize-observer";
 
 export default Vue.extend({
+  name: "scroll-view",
   props: {
     showScrollBar: {
       type: String,

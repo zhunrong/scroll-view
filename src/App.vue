@@ -226,7 +226,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ScrollView from "./ScrollView.vue";
+import ScrollView from "./index";
 
 export default Vue.extend({
   name: "App",
