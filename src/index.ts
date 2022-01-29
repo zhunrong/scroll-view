@@ -6,7 +6,7 @@ type ScrollView = typeof _ScrollView & PluginObject<void>;
 const plugin = _ScrollView as ScrollView;
 
 plugin.install = function (Vue) {
-  Vue.component(_ScrollView.name, _ScrollView);
+  Vue.component("scroll-view", _ScrollView);
 };
 
 plugin.version = process.env.VUE_APP_VERSION;

@@ -52,7 +52,7 @@
       </scroll-view>
     </div>
     <div style="height: 500px; border: 1px dashed red; margin-top: 30px">
-      <ScrollView>
+      <scroll-view>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit cum id
         minus odio. Explicabo, neque, veritatis consequatur dignissimos natus
         commodi quis rerum, quasi earum odit quia consectetur assumenda. Sit,
@@ -219,20 +219,16 @@
         exercitationem natus, totam odit eum. Ea, sequi. Tempore et culpa
         maxime, itaque natus dicta, quos adipisci minima, inventore voluptatum
         sunt!
-      </ScrollView>
+      </scroll-view>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import ScrollView from "./index";
 
 export default Vue.extend({
   name: "App",
-  components: {
-    ScrollView,
-  },
 });
 </script>
 

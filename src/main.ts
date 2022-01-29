@@ -1,5 +1,8 @@
 import Vue from "vue";
 import App from "./App.vue";
+import ScrollView from "./index";
+
+Vue.use(ScrollView);
 
 Vue.config.productionTip = false;
 
