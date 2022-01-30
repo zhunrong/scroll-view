@@ -1,30 +1,6 @@
-<template>
-  <div :class="['scroll-view', className]">
-    <div ref="scroll" class="scroll-container" @scroll="onScroll">
-      <div ref="scrollContent" class="scroll-content">
-        <slot />
-      </div>
-    </div>
-    <div class="scroll-bar scroll-bar-x">
-      <div
-        ref="xScrollBar"
-        class="scroll-bar-inner"
-        @mousedown="onMouseDown($event, 'x')"
-      ></div>
-    </div>
-    <div class="scroll-bar scroll-bar-y">
-      <div
-        ref="yScrollBar"
-        class="scroll-bar-inner"
-        @mousedown="onMouseDown($event, 'y')"
-      ></div>
-    </div>
-  </div>
-</template>
-
-<script lang="ts">
 import Vue from "vue";
 import { ResizeObserver } from "@juggle/resize-observer";
+import './ScrollView.scss';
 
 export default Vue.extend({
   name: "scroll-view",
@@ -200,75 +176,29 @@ export default Vue.extend({
       return { xScrollBarOffset, scrollLeft };
     },
   },
+  render() {
+    return (
+      <div class={`scroll-view ${this.className}`}>
+        <div ref="scroll" class="scroll-container" onScroll={this.onScroll}>
+          <div ref="scrollContent" class="scroll-content">
+            {this.$slots.default}
+          </div>
+        </div>
+        <div class="scroll-bar scroll-bar-x">
+          <div
+            ref="xScrollBar"
+            class="scroll-bar-inner"
+            onMousedown={(e: MouseEvent) => this.onMouseDown(e, "x")}
+          ></div>
+        </div>
+        <div class="scroll-bar scroll-bar-y">
+          <div
+            ref="yScrollBar"
+            class="scroll-bar-inner"
+            onMousedown={(e: MouseEvent) => this.onMouseDown(e, "y")}
+          ></div>
+        </div>
+      </div>
+    );
+  },
 });
-</script>
-
-<style lang="scss" scoped>
-.scroll-view {
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  --scroll-bar-color: rgba(204, 204, 204, 0.5);
-  --scroll-bar-active-color: rgba(204, 204, 204, 1);
-  --scroll-bar-size: 8px;
-  --native-scroll-bar-size: 17px;
-  &.hover:hover {
-    .scroll-bar {
-      opacity: 1;
-    }
-  }
-  &.always {
-    .scroll-bar {
-      opacity: 1;
-    }
-  }
-  .scroll-container {
-    width: calc(100% + var(--native-scroll-bar-size));
-    height: calc(100% + var(--native-scroll-bar-size));
-    overflow: scroll;
-  }
-  .scroll-content {
-    float: left;
-    min-width: 100%;
-  }
-}
-
-.scroll-bar {
-  position: absolute;
-  opacity: 0;
-  transition: opacity 0.5s;
-  &:active {
-    opacity: 1 !important;
-    .scroll-bar-inner {
-      background: var(--scroll-bar-active-color) !important;
-    }
-  }
-  .scroll-bar-inner {
-    border-radius: calc(var(--scroll-bar-size) / 2);
-    background: var(--scroll-bar-color);
-    user-select: none;
-    transition: background-color 0.3s;
-    &:hover {
-      background: var(--scroll-bar-active-color);
-    }
-  }
-}
-
-.scroll-bar-y {
-  top: 0;
-  right: 0;
-  .scroll-bar-inner {
-    width: var(--scroll-bar-size);
-    height: 0px;
-  }
-}
-
-.scroll-bar-x {
-  left: 0;
-  bottom: 0;
-  .scroll-bar-inner {
-    height: var(--scroll-bar-size);
-    width: 0px;
-  }
-}
-</style>

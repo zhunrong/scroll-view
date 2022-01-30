@@ -1,4 +1,4 @@
-import _ScrollView from "./ScrollView.vue";
+import _ScrollView from "./ScrollView";
 import { PluginObject } from "vue";
 
 type ScrollView = typeof _ScrollView & PluginObject<void>;
