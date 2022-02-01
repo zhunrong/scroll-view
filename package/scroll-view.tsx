@@ -1,6 +1,6 @@
 import Vue from "vue";
 import { ResizeObserver } from "@juggle/resize-observer";
-import './ScrollView.scss';
+import './scroll-view.scss';
 
 export default Vue.extend({
   name: "scroll-view",
