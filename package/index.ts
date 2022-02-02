@@ -9,6 +9,6 @@ plugin.install = function (Vue) {
   Vue.component("scroll-view", component);
 };
 
-// plugin.version = process.env.VUE_APP_VERSION!;
+plugin.version = process.env.VERSION!;
 
 export default plugin;
