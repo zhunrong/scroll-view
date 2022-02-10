@@ -14,7 +14,7 @@
           --scroll-bar-active-color: rgba(255, 0, 0, 1);
         "
       >
-        <div class="content"></div>
+        <div class="content" />
       </scroll-view>
     </div>
     <div
@@ -225,10 +225,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 export default Vue.extend({
-  name: "App",
+  name: 'App',
 });
 </script>
 

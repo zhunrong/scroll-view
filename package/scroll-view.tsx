@@ -1,18 +1,17 @@
-import Vue from "vue";
-import { ResizeObserver } from "@juggle/resize-observer";
+import Vue from 'vue';
+import { ResizeObserver } from '@juggle/resize-observer';
 import './scroll-view.scss';
 
 export default Vue.extend({
-  name: "scroll-view",
+  name: 'ScrollView',
   props: {
     showScrollBar: {
       type: String,
-      default: "hover",
+      default: 'hover',
     },
   },
   data() {
-    return {
-      ro: undefined as unknown as ResizeObserver,
+    const data = {
       clientHeight: 0,
       clientWidth: 0,
       scrollHeight: 0,
@@ -23,33 +22,36 @@ export default Vue.extend({
       xScrollBarOffset: 0,
       // mouse
       scrolling: false,
-      scrollDirection: "x",
+      scrollDirection: 'x',
       mouseX: 0,
       mouseY: 0,
     };
-  },
-  mounted() {
-    this.$nextTick(() => {
-      const scrollContent = this.$refs.scrollContent as HTMLDivElement;
-      this.ro = new ResizeObserver(() => {
-        this.onResize();
-      });
-      this.ro.observe(scrollContent);
-      document.addEventListener("mousemove", this.onMouseMove);
-      document.addEventListener("mouseup", this.onMouseUp);
-    });
-  },
-  beforeDestroy() {
-    this.ro.disconnect();
-    document.removeEventListener("mousemove", this.onMouseMove);
-    document.removeEventListener("mouseup", this.onMouseUp);
+    return data as typeof data & {
+      $ro: ResizeObserver;
+    };
   },
   computed: {
     className() {
       return /^(hover|always)$/.test(this.showScrollBar)
         ? this.showScrollBar
-        : "hover";
+        : 'hover';
     },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      const scrollContent = this.$refs.scrollContent as HTMLDivElement;
+      this.$ro = new ResizeObserver(() => {
+        this.onResize();
+      });
+      this.$ro.observe(scrollContent);
+      document.addEventListener('mousemove', this.onMouseMove);
+      document.addEventListener('mouseup', this.onMouseUp);
+    });
+  },
+  beforeDestroy() {
+    this.$ro.disconnect();
+    document.removeEventListener('mousemove', this.onMouseMove);
+    document.removeEventListener('mouseup', this.onMouseUp);
   },
   methods: {
     onResize() {
@@ -59,12 +61,12 @@ export default Vue.extend({
       Object.assign(yScrollBar.style, {
         height: `${this.yScrollBarHeight}px`,
         transform: `translate3d(0,${this.yScrollBarOffset}px,0)`,
-        display: this.yScrollBarHeight === this.clientHeight ? "none" : "block",
+        display: this.yScrollBarHeight === this.clientHeight ? 'none' : 'block',
       });
       Object.assign(xScrollBar.style, {
         width: `${this.xScrollBarWidth}px`,
         transform: `translate3d(${this.xScrollBarOffset}px,0,0)`,
-        display: this.xScrollBarWidth === this.clientWidth ? "none" : "block",
+        display: this.xScrollBarWidth === this.clientWidth ? 'none' : 'block',
       });
     },
     onScroll() {
@@ -79,7 +81,7 @@ export default Vue.extend({
         transform: `translate3d(${this.xScrollBarOffset}px,0,0)`,
       });
     },
-    onMouseDown(e: MouseEvent, direction: "x" | "y") {
+    onMouseDown(e: MouseEvent, direction: 'x' | 'y') {
       this.scrolling = true;
       this.scrollDirection = direction;
       this.mouseX = e.pageX;
@@ -89,7 +91,7 @@ export default Vue.extend({
       if (!this.scrolling) return;
       const { pageX, pageY } = e;
       const scroll = this.$refs.scroll as HTMLDivElement;
-      if (this.scrollDirection === "y") {
+      if (this.scrollDirection === 'y') {
         const yScrollBar = this.$refs.yScrollBar as HTMLDivElement;
         const { yScrollBarOffset, scrollTop } = this.scrollY(
           pageY - this.mouseY
@@ -112,7 +114,7 @@ export default Vue.extend({
     onMouseUp(e: MouseEvent) {
       if (!this.scrolling) return;
       const { pageX, pageY } = e;
-      if (this.scrollDirection === "y") {
+      if (this.scrollDirection === 'y') {
         this.yScrollBarOffset = this.scrollY(
           pageY - this.mouseY
         ).yScrollBarOffset;
@@ -188,14 +190,14 @@ export default Vue.extend({
           <div
             ref="xScrollBar"
             class="scroll-bar-inner"
-            onMousedown={(e: MouseEvent) => this.onMouseDown(e, "x")}
+            onMousedown={(e: MouseEvent) => this.onMouseDown(e, 'x')}
           ></div>
         </div>
         <div class="scroll-bar scroll-bar-y">
           <div
             ref="yScrollBar"
             class="scroll-bar-inner"
-            onMousedown={(e: MouseEvent) => this.onMouseDown(e, "y")}
+            onMousedown={(e: MouseEvent) => this.onMouseDown(e, 'y')}
           ></div>
         </div>
       </div>
