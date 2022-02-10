@@ -2,9 +2,8 @@ import Vue from 'vue';
 import App from './App.vue';
 import plugin from '@package';
 
-console.dir(plugin);
 Vue.use(plugin);
 
 new Vue({
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
